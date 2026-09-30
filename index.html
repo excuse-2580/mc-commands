@@ -313,6 +313,7 @@ main{padding:var(--md-s) var(--md-l) calc(28px + env(safe-area-inset-bottom))}
 }
 .card:hover{box-shadow:var(--md-elev-1)}
 .cmd{font-size:15.5px;color:var(--md-primary);letter-spacing:0}
+.row2{margin:-2px 0 var(--md-m)}
 .badge{border-radius:var(--md-r-xs);font-weight:700;font-size:9.5px;letter-spacing:.6px;padding:4px 8px}
 .badge.java{background:#3b4a6b;color:#b3c8ef}
 .badge.bedrock{background:#5b4636;color:#f2cba6}
@@ -423,6 +424,40 @@ main{padding:var(--md-s) var(--md-l) calc(28px + env(safe-area-inset-bottom))}
   box-shadow:var(--md-elev-2);max-width:90vw;text-align:center;
 }
 
+/* --- 版本状态标签（MD3 assist chip） --- */
+.vtag{
+  display:inline-flex;align-items:center;gap:4px;
+  border-radius:var(--md-r-xs);font-size:10px;font-weight:700;letter-spacing:.4px;
+  padding:3px 8px;vertical-align:middle;
+}
+.vtag.ok{background:var(--md-primary-container);color:var(--md-on-primary-container)}
+.vtag.need{background:#5b4636;color:#f2cba6}
+.vtag.gone{background:#5b2f2f;color:#f2a6a6}
+.vtag .dot2{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.85}
+/* 已移除卡片整体降饱和 */
+.card.dead{opacity:.72;border-style:dashed}
+.card.dead .cmd{color:var(--md-on-surface-variant);text-decoration:line-through}
+/* 已移除：替换提示条 */
+.alt{
+  background:#5b2f2f;border-radius:var(--md-r-s);padding:var(--md-m);margin-bottom:var(--md-m);
+  display:flex;gap:var(--md-s);align-items:flex-start;
+}
+.alt .ai{
+  flex:0 0 auto;width:20px;height:20px;border-radius:50%;
+  background:#f2a6a6;color:#3d1414;font-size:11px;font-weight:800;display:grid;place-items:center;margin-top:1px;
+}
+.alt .at{flex:1;font-size:12.5px;line-height:1.75;color:#ffd9d9;font-weight:500}
+.alt .at b{color:#fff;font-weight:700}
+/* 版本筛选行 */
+.vfilter{display:flex;gap:var(--md-s);padding:0 var(--md-l) var(--md-s)}
+.vbtn{
+  flex:1;height:34px;line-height:32px;text-align:center;border-radius:var(--md-r-s);
+  background:var(--md-surface-container-high);border:1px solid var(--md-outline-variant);
+  color:var(--md-on-surface-variant);font-size:12px;font-weight:600;cursor:pointer;
+  transition:background var(--md-motion) var(--md-easing),color var(--md-motion) var(--md-easing);
+}
+.vbtn.on{background:var(--md-primary);color:var(--md-on-primary);border-color:transparent}
+
 .empty{color:var(--md-outline);font-size:14px;padding:56px 20px}
 .empty .big{font-size:36px;margin-bottom:var(--md-m);opacity:.6}
 footer{
@@ -458,6 +493,12 @@ footer b{color:var(--md-on-surface-variant);font-weight:600}
 <div class="tab" data-v="bedrock">基岩版</div>
 </div>
 <div class="chips" id="chips"></div>
+<div class="vfilter">
+<div class="vbtn on" data-a="all">全部</div>
+<div class="vbtn" data-a="ok">能用</div>
+<div class="vbtn" data-a="need">需新版本</div>
+<div class="vbtn" data-a="dead">已移除</div>
+</div>
 <div class="count" id="count"></div>
 </div>
 
@@ -644,6 +685,32 @@ var DATA=[
 {cmd:'/give 命令方块',v:'both',cat:'命令方块',args:'<玩家> <命令方块类型>',desc:'获取命令方块物品（放置后可用）。',ex:['/give @s minecraft:command_block','/give @s minecraft:chain_command_block','/give @s minecraft:repeating_command_block'],note:'命令方块无法在生存模式破坏，只有创造模式+管理员能放置和修改'},
 ];
 
+/* ================= 版本状态 =================
+   SINCE：最低可用版本（Java 版为准；基岩版通常更晚或不支持）
+   REMOVED：已在某版本删除 / 被取代，键为命令名，值为 {at, use}
+   未标注 = 各版本通用的基础命令
+   说明：版本号以 Mojang 官方更新日志为准，此处为常见共识值
+============================================== */
+var SINCE={
+  '/damage':'1.20+','/place':'1.21+','/tick':'1.20.4+','/item':'1.17+',
+  '/data':'1.13+','/loot':'1.14+','/forceload':'1.13.1+','/recipe':'1.13+',
+  '/advancement':'1.12+','/bossbar':'1.9+','/schedule':'1.14+','/trigger':'1.9+',
+  '/spectate':'1.8+','/attribute':'1.16+','/fillbiome':'1.19.4+',
+  '/execute if':'1.13+','/worldborder':'1.8+','/title':'1.8+','/tellraw':'1.8+',
+  '/particle':'1.8+','/clone':'1.8+','/fill':'1.8+','/effect':'1.8+',
+  '/summon':'1.8+','/setblock':'1.8+','/scoreboard':'1.8+','/team':'1.8+',
+  '/tickingarea':'基岩版','/mobevent':'基岩版','/camerashake':'基岩版','/music':'基岩版',
+  '/ability':'基岩版','/structure':'基岩版','/replaceitem':'基岩版','/setmaxplayers':'基岩版',
+};
+var REMOVED={
+  '/testfor':{at:'1.13 删除',use:'/execute if entity'},
+  '/testforblock':{at:'1.13 删除',use:'/execute if block'},
+  '/testforblocks':{at:'1.13 删除',use:'/execute if blocks'},
+  '/stats':{at:'1.13 删除',use:'/execute store'},
+  '/scoreboard players test':{at:'1.13 删除',use:'/execute if score'},
+  '/blockdata':{at:'1.13 删除',use:'/data merge block'},
+};
+
 /* ================= 大白话：每条命令用一句人话说明 ================= */
 var PLAIN={
 /* 速查 */
@@ -750,7 +817,7 @@ var PLAIN={
 };
 
 /* ================= 状态与渲染 ================= */
-var state={v:'all',cat:'全部',q:''};
+var state={v:'all',cat:'全部',q:'',avail:'all'};
 var CATS=['全部','速查','基础','世界','物品','实体','方块','红石','命令方块','显示','管理'];
 
 var listEl=document.getElementById('list');
@@ -770,9 +837,17 @@ function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').repl
 function match(d){
   if(state.v!=='all'&&d.v!=='both'&&d.v!==state.v)return false;
   if(state.cat!=='全部'&&d.cat!==state.cat)return false;
+  if(state.avail!=='all'){
+    var isDead=!!REMOVED[d.cmd];
+    var isNeed=!isDead&&!!SINCE[d.cmd];
+    if(state.avail==='dead'&&!isDead)return false;
+    if(state.avail==='need'&&!isNeed)return false;
+    if(state.avail==='ok'&&(isDead||isNeed))return false;
+  }
   if(!state.q)return true;
   var q=state.q.toLowerCase();
-  var hay=(d.cmd+' '+d.args+' '+d.desc+' '+(d.note||'')+' '+(d.ex||[]).join(' ')+' '+d.cat+' '+(PLAIN[d.cmd]||'')).toLowerCase();
+  var hay=(d.cmd+' '+d.args+' '+d.desc+' '+(d.note||'')+' '+(d.ex||[]).join(' ')+' '+d.cat+' '
+    +(PLAIN[d.cmd]||'')+' '+(SINCE[d.cmd]||'')+' '+((REMOVED[d.cmd]||{}).use||'')).toLowerCase();
   return hay.indexOf(q)>=0;
 }
 
@@ -785,9 +860,27 @@ function cardHtml(d){
   var plainHtml=plain
     ? '<div class="plain"><span class="pi">白</span><span class="pt">'+esc(plain)+'</span></div>'
     : '';
-  return '<div class="card">'
+
+  /* 版本状态 */
+  var dead=REMOVED[d.cmd];
+  var since=SINCE[d.cmd]||'';
+  var vtag='',altHtml='',deadCls='';
+  if(dead){
+    vtag='<span class="vtag gone"><span class="dot2"></span>已移除 · '+esc(dead.at)+'</span>';
+    altHtml='<div class="alt"><span class="ai">改</span><span class="at">这条命令已经删掉了，现在用不了。'
+      +'请改用 <b>'+esc(dead.use)+'</b>。</span></div>';
+    deadCls=' dead';
+  }else if(since){
+    vtag='<span class="vtag need"><span class="dot2"></span>需 '+esc(since)+'</span>';
+  }else{
+    vtag='<span class="vtag ok"><span class="dot2"></span>各版本通用</span>';
+  }
+
+  return '<div class="card'+deadCls+'">'
     +'<div class="row1"><div class="cmd">'+esc(d.cmd)+'</div>'+verLabel(d.v)
     +'<button class="copy" data-copy="'+esc(d.cmd+(d.args?(' '+d.args):''))+'" title="复制语法">⧉</button></div>'
+    +'<div class="row2">'+vtag+'</div>'
+    +altHtml
     +plainHtml
     +'<div class="syntax"><span class="k">'+esc(d.cmd)+'</span>'+argHtml+'</div>'
     +'<div class="desc">'+esc(d.desc)+'</div>'
@@ -842,6 +935,14 @@ qEl.addEventListener('input',function(){
 });
 clearEl.addEventListener('click',function(){
   qEl.value='';state.q='';clearEl.classList.remove('show');render();qEl.focus();
+});
+
+/* 可用性筛选 */
+document.querySelectorAll('.vbtn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.vbtn').forEach(function(x){x.classList.remove('on')});
+    b.classList.add('on');state.avail=b.getAttribute('data-a');render();
+  });
 });
 
 /* 版本切换 */
