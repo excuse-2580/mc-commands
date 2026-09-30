@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#3d7c40">
+<title>我的世界指令大全</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+background:#1f1f23;color:#e6e6e6;
+font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+font-size:14px;line-height:1.6;
+overflow-x:hidden;
+}
+code,pre,.mono{font-family:"SF Mono",Consolas,"Courier New",monospace}
+
+/* ===== 顶部 ===== */
+header{
+background:linear-gradient(180deg,#3d7c40,#2d5c30);
+padding:calc(14px + env(safe-area-inset-top)) 16px 14px;
+position:sticky;top:0;z-index:20;
+box-shadow:0 2px 12px rgba(0,0,0,.35);
+}
+.htop{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.logo{
+width:34px;height:34px;border-radius:7px;flex:0 0 auto;
+background:#5dbb63;display:grid;place-items:center;
+font-weight:900;font-size:17px;color:#1f3d20;
+box-shadow:inset 0 -3px 0 rgba(0,0,0,.18);
+}
+header h1{font-size:18px;font-weight:800;color:#fff;letter-spacing:.5px}
+header h1 small{display:block;font-size:11px;font-weight:400;color:#bfe3c1;margin-top:1px}
+.searchwrap{position:relative}
+.searchwrap .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#8a8a96;font-size:14px}
+#q{
+width:100%;height:42px;border:none;border-radius:10px;
+background:#2a2a30;color:#e6e6e6;font-size:14px;
+padding:0 38px 0 34px;outline:none;font-family:inherit;
+border:1px solid #3a3a42;
+}
+#q:focus{border-color:#5dbb63;background:#303038}
+#clear{
+position:absolute;right:8px;top:50%;transform:translateY(-50%);
+width:26px;height:26px;border:none;border-radius:50%;
+background:#3a3a42;color:#9a9aa6;font-size:13px;cursor:pointer;display:none;
+}
+#clear.show{display:block}
+
+/* ===== 版本 / 分类 ===== */
+.bars{
+padding:10px 0 8px;background:#1f1f23;
+position:sticky;top:calc(74px + env(safe-area-inset-top));z-index:15;
+}
+.tabs{display:flex;gap:8px;padding:0 16px;margin-bottom:8px}
+.tab{
+flex:1;text-align:center;padding:8px 0;border-radius:9px;font-size:13px;font-weight:700;
+background:#2a2a30;color:#9a9aa6;cursor:pointer;border:1px solid #33333c;
+transition:.15s;
+}
+.tab.on{background:#5dbb63;color:#16301a;border-color:#5dbb63}
+.chips{
+display:flex;gap:7px;padding:2px 16px 4px;overflow-x:auto;
+scrollbar-width:none;
+}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+flex:0 0 auto;padding:6px 13px;border-radius:18px;font-size:12px;font-weight:600;
+background:#2a2a30;color:#9a9aa6;cursor:pointer;border:1px solid #33333c;white-space:nowrap;
+transition:.15s;
+}
+.chip.on{background:#3a5a3d;color:#bfe3c1;border-color:#5dbb63}
+.count{padding:6px 16px 2px;font-size:11px;color:#6a6a78}
+
+/* ===== 卡片 ===== */
+main{padding:8px 16px calc(30px + env(safe-area-inset-bottom))}
+.card{
+background:#2a2a30;border:1px solid #33333c;border-radius:12px;
+padding:12px 13px;margin-bottom:10px;
+}
+.card .row1{display:flex;align-items:flex-start;gap:8px;margin-bottom:6px}
+.cmd{
+font-family:"SF Mono",Consolas,monospace;
+font-size:15px;font-weight:700;color:#7fd67f;flex:1;
+word-break:break-all;line-height:1.4;
+}
+.badge{
+flex:0 0 auto;font-size:10px;font-weight:800;padding:3px 7px;border-radius:5px;
+letter-spacing:.5px;
+}
+.badge.java{background:#3a4a6a;color:#9dc0f0}
+.badge.bedrock{background:#5a4a3a;color:#f0c89d}
+.badge.both{background:#3a5a3d;color:#9df0a5}
+.copy{
+flex:0 0 auto;width:30px;height:30px;border-radius:7px;border:none;
+background:#3a3a44;color:#c8c8d0;font-size:13px;cursor:pointer;
+display:grid;place-items:center;transition:.12s;
+}
+.copy:active{background:#5dbb63;color:#16301a;transform:scale(.92)}
+.syntax{
+background:#202026;border:1px solid #33333c;border-radius:8px;
+padding:8px 10px;margin-bottom:6px;
+font-family:"SF Mono",Consolas,monospace;font-size:12.5px;
+color:#c8d6c8;word-break:break-all;line-height:1.75;
+}
+.syntax .k{color:#7fd67f}
+.syntax .o{color:#8a8a96}
+.desc{font-size:13px;color:#b0b0bc;margin-bottom:7px;line-height:1.7}
+.exs{display:flex;flex-direction:column;gap:5px}
+.ex{
+display:flex;align-items:center;gap:8px;
+background:#232329;border-radius:7px;padding:7px 9px;cursor:pointer;
+transition:.12s;border:1px solid transparent;
+}
+.ex:active{border-color:#5dbb63;background:#2a2a34}
+.ex .t{
+flex:1;font-family:"SF Mono",Consolas,monospace;font-size:12px;
+color:#a8c8e8;word-break:break-all;line-height:1.5;
+}
+.ex .c{flex:0 0 auto;font-size:10px;color:#6a6a78}
+.note{
+margin-top:7px;font-size:11.5px;color:#8a8a96;line-height:1.65;
+background:#232329;border-left:2px solid #5a6a3a;padding:6px 9px;border-radius:0 6px 6px 0;
+}
+.empty{text-align:center;padding:50px 20px;color:#6a6a78;font-size:14px}
+.empty .big{font-size:34px;margin-bottom:10px}
+
+/* ===== 底部 ===== */
+footer{
+padding:16px;text-align:center;font-size:11.5px;color:#6a6a78;line-height:1.8;
+border-top:1px solid #2a2a30;
+}
+footer b{color:#8a8a96}
+
+/* toast */
+.toast{
+position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom));
+transform:translateX(-50%) translateY(10px);
+background:#5dbb63;color:#16301a;font-size:13px;font-weight:700;
+padding:10px 20px;border-radius:22px;
+opacity:0;pointer-events:none;transition:.28s;z-index:99;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+<div class="htop">
+<div class="logo">M</div>
+<h1>我的世界指令大全<small>Java 版 · 基岩版 · 点击即复制</small></h1>
+</div>
+<div class="searchwrap">
+<span class="ic">🔍</span>
+<input id="q" type="search" placeholder="搜索指令，如 give / 传送 / 天气…" autocomplete="off">
+<button id="clear">✕</button>
+</div>
+</header>
+
+<div class="bars">
+<div class="tabs">
+<div class="tab on" data-v="all">全部</div>
+<div class="tab" data-v="java">Java 版</div>
+<div class="tab" data-v="bedrock">基岩版</div>
+</div>
+<div class="chips" id="chips"></div>
+<div class="count" id="count"></div>
+</div>
+
+<main id="list"></main>
+
+<footer>
+共收录 <b id="total">0</b> 条指令<br>
+语法以 Java 版 1.20–1.21 与基岩版常见写法为准<br>
+不同版本细节可能有差异，以你实际游戏为准
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= 指令数据 =================
+   v: java / bedrock / both
+   cat: 分类
+   ex: 示例数组
+============================================== */
+var DATA=[
+/* ---------- 速查 ---------- */
+{cmd:'@p',v:'both',cat:'速查',args:'',desc:'目标选择器：最近的玩家。',ex:['/give @p diamond 1','/tp @s @p'],note:'@p 最近玩家 · @a 所有玩家 · @r 随机玩家 · @s 自己 · @e 所有实体（含生物、掉落物、箭等）'},
+{cmd:'@a',v:'both',cat:'速查',args:'',desc:'目标选择器：所有玩家（在线）。',ex:['/gamemode creative @a','/effect give @a speed 30 1'],note:'常用参数：[type=zombie]、[limit=1]、[sort=nearest|furthest|random]、[distance=..5]、[scores={金币=10..}]、[name="Steve"]、[tag=红队]'},
+{cmd:'@e',v:'both',cat:'速查',args:'',desc:'目标选择器：所有实体（含生物、掉落物、矿车、箭等）。',ex:['/kill @e[type=zombie]','/tp @s @e[type=creeper,limit=1,sort=nearest]'],note:'清空掉落物：/kill @e[type=item]。小心别写成 /kill @e 把生物全杀了'},
+{cmd:'@s',v:'both',cat:'速查',args:'',desc:'目标选择器：命令执行者自己。命令方块里指代方块本身。',ex:['/give @s diamond 1','/execute as @a at @s run particle flame ~ ~1 ~']},
+{cmd:'~ ~ ~',v:'both',cat:'速查',args:'',desc:'相对坐标：以执行者当前位置为基准。',ex:['/tp @s ~ ~10 ~','/setblock ~ ~-1 ~ minecraft:stone','/summon zombie ~5 ~ ~'],note:'~ 相对坐标（可加减，如 ~-3） · ^ ^ ^ 以视线方向为基准（左/上/前） · 绝对坐标直接写数字，如 100 64 100'},
+
+/* ---------- 基础与玩家 ---------- */
+{cmd:'/gamemode',v:'both',cat:'基础',args:'<模式> [玩家]',desc:'切换游戏模式。模式：survival 生存、creative 创造、adventure 冒险、spectator 旁观。',ex:['/gamemode creative','/gamemode survival @a','/gamemode spectator @p'],note:'基岩版可写简写：s / c / a，或数字 0=生存 1=创造 2=冒险'},
+{cmd:'/give',v:'both',cat:'基础',args:'<玩家> <物品> [数量]',desc:'给予玩家物品。物品需写命名空间 ID，如 minecraft:diamond_sword。',ex:['/give @s diamond 64','/give @p minecraft:diamond_sword 1','/give @a minecraft:golden_apple 5'],note:'Java 1.20.5+ 用组件附加数据：/give @s minecraft:diamond_sword[enchantments={levels:{sharpness:5}}]。旧版用 NBT：/give @s minecraft:diamond_sword{Enchantments:[{id:sharpness,lvl:5}]}。基岩版用 /give @s diamond_sword 1 0 {"enchantments":[{"id":"sharpness","level":5}]}'},
+{cmd:'/clear',v:'both',cat:'基础',args:'[玩家] [物品] [最大数量]',desc:'清空玩家背包或指定物品。',ex:['/clear @s','/clear @a minecraft:dirt','/clear @p minecraft:stone 32']},
+{cmd:'/kill',v:'both',cat:'基础',args:'[目标]',desc:'立即杀死指定实体（对玩家也生效）。',ex:['/kill @s','/kill @e[type=zombie]','/kill @e[type=item]'],note:'/kill @e 会清掉所有实体，包括你自己（若你是实体）。清掉落物用 /kill @e[type=item]'},
+{cmd:'/tp',v:'both',cat:'基础',args:'[目标] <坐标|目标>',desc:'传送。可传坐标、也可把 A 传到 B 身上。',ex:['/tp @s 100 64 100','/tp @p @s','/tp @s ~ ~10 ~','/tp @a 0 70 0'],note:'Java 版完整写法是 /teleport，/tp 是其简写'},
+{cmd:'/teleport',v:'java',cat:'基础',args:'<目标> <坐标|目标> [朝向]',desc:'传送（Java 版完整形式），可指定朝向与 facing。',ex:['/teleport @s 0 64 0 0 0','/teleport @s @e[type=villager,limit=1]','/teleport @s 100 64 100 facing 0 64 0']},
+{cmd:'/gamerule',v:'both',cat:'基础',args:'<规则> [值]',desc:'修改游戏规则。不带值则查询当前值。',ex:['/gamerule keepInventory true','/gamerule doDaylightCycle false','/gamerule doMobSpawning false','/gamerule mobGriefing false','/gamerule randomTickSpeed 10','/gamerule doFireTick false'],note:'常用规则：keepInventory 死亡不掉落 · doDaylightCycle 时间流动 · doWeatherCycle 天气变化 · doMobSpawning 刷怪 · mobGriefing 生物破坏地形 · doFireTick 火焰蔓延 · randomTickSpeed 随机刻速度（作物生长速度） · sendCommandFeedback 命令回显 · showDeathMessages 死亡信息 · doTileDrops 方块掉落 · doImmediateRespawn 立即重生 · naturalRegeneration 自然回血。基岩版还有 showCoordinates、fireDamage、drowningDamage 等'},
+{cmd:'/difficulty',v:'both',cat:'基础',args:'<难度>',desc:'设置难度。peaceful 和平、easy 简单、normal 普通、hard 困难。',ex:['/difficulty peaceful','/difficulty hard'],note:'和平模式下饥饿不掉血、不会刷攻击型生物'},
+{cmd:'/xp',v:'both',cat:'基础',args:'add <目标> <数量> [levels|points]',desc:'给予经验。levels 为等级，points 为经验值。',ex:['/xp add @s 30 levels','/xp add @p 100 points'],note:'Java 版完整写法 /experience，简写 /xp'},
+{cmd:'/effect',v:'both',cat:'基础',args:'give <目标> <效果> [秒数] [等级] | clear <目标> [效果]',desc:'给予或清除状态效果。',ex:['/effect give @s speed 30 1','/effect give @a regeneration 10 2','/effect give @p night_vision 99999 0','/effect clear @s','/effect clear @a minecraft:poison'],note:'等级从 0 开始：1 实际是 II 级。99999 秒 ≈ 永久。常用效果：speed 速度、jump_boost 跳跃、strength 力量、resistance 抗性、fire_resistance 防火、night_vision 夜视、invisibility 隐身、regeneration 再生、absorption 伤害吸收、haste 急迫、slow_falling 缓降、water_breathing 水下呼吸'},
+{cmd:'/enchant',v:'both',cat:'基础',args:'<目标> <附魔> [等级]',desc:'给手中物品附魔。',ex:['/enchant @s sharpness 5','/enchant @p minecraft:unbreaking 3','/enchant @a efficiency 5'],note:'必须对能接受该附魔的物品使用，否则失败。附魔等级上限可用 /enchant @s sharpness 255 突破常规限制'},
+{cmd:'/damage',v:'java',cat:'基础',args:'<目标> <数量> [伤害类型] [来源]',desc:'（Java 1.20+）对目标造成伤害，可指定伤害类型。',ex:['/damage @p 5 minecraft:fall','/damage @s 10 minecraft:magic']},
+{cmd:'/attribute',v:'java',cat:'基础',args:'<目标> <属性> base set <值>|get|modifier …',desc:'（Java 版）查看或修改实体属性。',ex:['/attribute @s minecraft:generic.max_health base set 40','/attribute @p minecraft:generic.movement_speed base get','/attribute @s minecraft:generic.attack_damage base set 10'],note:'Java 1.21 起属性名去掉了 generic. 前缀，如 minecraft:max_health'},
+
+/* ---------- 世界与环境 ---------- */
+{cmd:'/time',v:'both',cat:'世界',args:'set <day|night|noon|midnight|数值> | add <数值> | query <daytime|gametime>',desc:'设置或调整世界时间。',ex:['/time set day','/time set night','/time set noon','/time set midnight','/time set 0','/time add 1000','/time query daytime'],note:'刻度：0=日出 6000=正午 12000=日落 18000=午夜，一圈 24000。/gamerule doDaylightCycle false 可锁死时间'},
+{cmd:'/weather',v:'both',cat:'世界',args:'<clear|rain|thunder> [持续秒数]',desc:'设置天气。',ex:['/weather clear 600','/weather rain','/weather thunder 1200'],note:'配合 /gamerule doWeatherCycle false 可锁死天气'},
+{cmd:'/seed',v:'both',cat:'世界',args:'',desc:'显示当前世界种子。',ex:['/seed'],note:'Java 版需开启对应权限；基岩版直接在聊天栏可用'},
+{cmd:'/locate',v:'both',cat:'世界',args:'structure <结构>',desc:'查找最近的结构并给出坐标（可点击传送）。',ex:['/locate structure minecraft:village','/locate structure minecraft:stronghold','/locate structure minecraft:nether_fortress','/locate biome minecraft:mushroom_fields'],note:'Java 1.19 之后写法为 /locate structure <结构>；更早版本是 /locate <结构名>。基岩版为 /locate <结构名>'},
+{cmd:'/setworldspawn',v:'both',cat:'世界',args:'[坐标]',desc:'设置世界出生点。',ex:['/setworldspawn','/setworldspawn 0 64 0']},
+{cmd:'/spawnpoint',v:'both',cat:'世界',args:'[玩家] [坐标]',desc:'设置玩家重生点。',ex:['/spawnpoint @s','/spawnpoint @a 100 64 100'],note:'床也能设置重生点；床被破坏且无 spawnpoint 则回到世界出生点'},
+{cmd:'/worldborder',v:'java',cat:'世界',args:'set <直径> | center <x> <z> | add <格数> | get',desc:'（Java 版）设置世界边界。',ex:['/worldborder set 1000','/worldborder center 0 0','/worldborder add 100','/worldborder get']},
+{cmd:'/tickingarea',v:'bedrock',cat:'世界',args:'add <范围> [名字] | remove <名字|位置> | list',desc:'（基岩版）设置常加载区域，玩家不在也持续运转。',ex:['/tickingarea add 0 0 0 100 100 100 农场','/tickingarea remove 农场','/tickingarea list'],note:'Java 版对应功能为 /forceload'},
+{cmd:'/forceload',v:'java',cat:'世界',args:'add <坐标> [坐标] | remove <坐标>|all | query',desc:'（Java 版）强制加载区块，玩家不在也保持运转。',ex:['/forceload add ~ ~','/forceload add 0 0 100 100','/forceload remove all']},
+{cmd:'/mobevent',v:'bedrock',cat:'世界',args:'<事件> <true|false>',desc:'（基岩版）控制特定生物事件是否发生。',ex:['/mobevent minecraft:pillager_patrols_event false','/mobevent minecraft:ender_dragon_event true']},
+{cmd:'/fillbiome',v:'java',cat:'世界',args:'<起点> <终点> <生物群系>',desc:'（Java 1.19.4+）修改区域生物群系。',ex:['/fillbiome 0 60 0 50 80 50 minecraft:plains']},
+
+/* ---------- 物品与背包 ---------- */
+{cmd:'/item',v:'java',cat:'物品',args:'replace entity <目标> <槽位> with <物品> | modify …',desc:'（Java 版）操作实体物品栏槽位。',ex:['/item replace entity @s weapon.mainhand with minecraft:diamond_sword','/item replace entity @p armor.head with minecraft:diamond_helmet','/item replace entity @s hotbar.0 with minecraft:compass'],note:'槽位：weapon.mainhand 主手、weapon.offhand 副手、armor.head/chest/legs/feet 头部/胸/腿/脚、hotbar.0~8 快捷栏、inventory.0~26 背包、container.0~53 容器'},
+{cmd:'/replaceitem',v:'bedrock',cat:'物品',args:'entity|block <目标> <槽位> <物品> [数量]',desc:'（基岩版）替换指定槽位的物品。',ex:['/replaceitem entity @s slot.hotbar 0 diamond_sword 1','/replaceitem entity @p slot.armor.head diamond_helmet']},
+{cmd:'/loot',v:'java',cat:'物品',args:'give <目标> loot <战利品表> | spawn <坐标> loot <战利品表>',desc:'（Java 版）直接按战利品表生成物品。',ex:['/loot give @s loot minecraft:chests/simple_dungeon','/loot spawn ~ ~ ~ loot minecraft:chests/end_city_treasure','/loot replace entity @s hotbar.0 loot minecraft:entities/ender_dragon']},
+{cmd:'/recipe',v:'java',cat:'物品',args:'give <目标> <配方|*> | take <目标> <配方|*>',desc:'（Java 版）解锁或收回合成配方。',ex:['/recipe give @a *','/recipe take @a *','/recipe give @s minecraft:crafting_table']},
+{cmd:'/advancement',v:'java',cat:'物品',args:'grant|revoke <目标> only <进度> | everything',desc:'（Java 版）授予或收回进度。',ex:['/advancement grant @s only minecraft:story/root','/advancement grant @a everything','/advancement revoke @s everything']},
+
+/* ---------- 实体与生物 ---------- */
+{cmd:'/summon',v:'both',cat:'实体',args:'<实体> [坐标] [数据]',desc:'召唤实体（生物、掉落物、矿车、闪电等）。',ex:['/summon zombie ~ ~ ~','/summon creeper ~5 ~ ~ {powered:1b}','/summon minecraft:lightning_bolt ~ ~ ~','/summon horse ~ ~ ~ {Tame:1,Saddle:1b}','/summon item ~ ~ ~ {Item:{id:"minecraft:diamond",Count:1b}}'],note:'Java 版用 NBT 附加数据；基岩版格式为 /summon <实体> [名字] [坐标] [朝向]，用生成事件控制变体'},
+{cmd:'/execute',v:'both',cat:'实体',args:'<子命令> … run <命令>',desc:'最强大的命令：以某实体/位置/条件执行另一条命令。',ex:['/execute as @a at @s run say 大家好','/execute at @e[type=zombie] run summon lightning_bolt ~ ~ ~','/execute if block ~ ~-1 ~ minecraft:stone run say 我站在石头上','/execute positioned 0 64 0 run setblock ~ ~ ~ minecraft:beacon','/execute unless entity @e[type=creeper] run say 没有苦力怕','/execute as @e[type=item] at @s run tp @s ~ ~ ~'],note:'常用子命令：as 以…身份 · at 在…位置 · positioned 指定坐标 · if/unless 条件判断（block/entity/score/data/dimension） · store 存储结果 · run 执行。可链式组合：/execute as @a at @s if block ~ ~-1 ~ stone run effect give @s speed 5 1'},
+{cmd:'/data',v:'java',cat:'实体',args:'get|merge|modify|remove <entity|block|storage> <目标> …',desc:'（Java 版）读取或修改实体/方块/存储的 NBT 数据。',ex:['/data get entity @s','/data get entity @s Health','/data merge entity @s {NoAI:1b}','/data get block ~ ~ ~','/data merge entity @e[type=zombie,limit=1] {IsBaby:1b}'],note:'NoAI:1b 让生物不动 · Silent:1b 静音 · NoGravity:1b 无重力 · Invulnerable:1b 无敌 · PersistenceRequired:1b 不消失 · CustomName 自定义名'},
+{cmd:'/spectate',v:'java',cat:'实体',args:'<目标> [玩家]',desc:'（Java 版）以某实体的视角旁观。',ex:['/spectate @e[type=creeper,limit=1] @s','/spectate @p @s']},
+{cmd:'/ability',v:'bedrock',cat:'实体',args:'<玩家> <能力> <true|false>',desc:'（基岩版）设置玩家能力，如是否可飞、是否无敌。',ex:['/ability @s mayfly true','/ability @p invulnerable false']},
+
+/* ---------- 方块与建筑 ---------- */
+{cmd:'/setblock',v:'both',cat:'方块',args:'<坐标> <方块> [模式]',desc:'放置单个方块。',ex:['/setblock ~ ~ ~ minecraft:chest','/setblock 0 64 0 minecraft:diamond_block','/setblock ~ ~-1 ~ minecraft:stone keep'],note:'模式：replace 替换（默认） · keep 只替换空气 · destroy 先破坏再放置'},
+{cmd:'/fill',v:'both',cat:'方块',args:'<起点> <终点> <方块> [模式] [过滤方块]',desc:'批量填充一个长方体区域。',ex:['/fill ~1 ~ ~1 ~10 ~5 ~10 minecraft:stone','/fill 0 60 0 20 70 20 minecraft:air','/fill ~-5 ~-1 ~-5 ~5 ~-1 ~5 minecraft:grass_block','/fill 0 60 0 30 80 30 minecraft:air replace minecraft:stone'],note:'区域上限：Java 版默认 32768 格。replace 模式可做"把石头换成空气"这类替换'},
+{cmd:'/clone',v:'both',cat:'方块',args:'<起点> <终点> <目标坐标> [模式]',desc:'复制一块区域到别处。',ex:['/clone 0 60 0 10 70 10 50 60 50','/clone ~1 ~ ~1 ~10 ~5 ~10 ~20 ~ ~20 filtered minecraft:stone'],note:'模式：filtered 只复制指定方块 · masked 只复制非空气 · replace 覆盖（默认） · move 移动（源区域清空）'},
+{cmd:'/place',v:'java',cat:'方块',args:'feature|jigsaw|structure|template <内容> [坐标]',desc:'（Java 1.21+）放置地物、结构或模板。',ex:['/place feature minecraft:tree ~ ~ ~','/place structure minecraft:village_plains ~ ~ ~','/place template mynamespace:myhouse ~ ~ ~'],note:'替代了旧版的 /placefeature、/placestructure 等分散命令'},
+{cmd:'/structure',v:'bedrock',cat:'方块',args:'save <名字> <起点> <终点> | load <名字> <坐标>',desc:'（基岩版）保存并加载结构。',ex:['/structure save 我的房子 ~-5 ~ ~-5 ~5 ~10 ~5','/structure load 我的房子 100 64 100']},
+
+/* ---------- 命令与红石 ---------- */
+{cmd:'/scoreboard',v:'both',cat:'红石',args:'objectives … | players …',desc:'计分板：创建变量、记录数值、显示到侧边栏。',ex:['/scoreboard objectives add 金币 dummy 金币','/scoreboard objectives add 死亡数 deathCount','/scoreboard objectives setdisplay sidebar 金币','/scoreboard players set @s 金币 100','/scoreboard players add @s 金币 10','/scoreboard players reset @a 金币','/scoreboard objectives remove 金币'],note:'判据：dummy 手动控制 · deathCount 死亡数 · playerKillCount 击杀玩家数 · totalKillCount 总击杀 · health 血量 · level 等级 · xp 经验值 · trigger 触发器'},
+{cmd:'/execute store',v:'java',cat:'红石',args:'store <result|success> score|bossbar|entity|block … run <命令>',desc:'（Java 版）把命令结果存进计分板或其他位置。',ex:['/execute store result score @s 金币 run data get entity @s Health','/execute store success score @s 结果 run tp @s ~ ~ ~']},
+{cmd:'/function',v:'both',cat:'红石',args:'<命名空间:函数名>',desc:'执行函数文件（多条命令打包）。',ex:['/function mydatapack:start','/function mynamespace:give_kit'],note:'Java 版函数放在 数据包/data/<命名空间>/functions/；基岩版放在 行为包/functions/'},
+{cmd:'/datapack',v:'java',cat:'红石',args:'list|enable|disable <数据包>',desc:'（Java 版）查看与控制数据包。',ex:['/datapack list','/datapack enable "file/mydatapack"','/datapack disable "file/mydatapack"']},
+{cmd:'/schedule',v:'java',cat:'红石',args:'function <函数> <延迟> | clear <函数>',desc:'（Java 版）延时执行函数。',ex:['/schedule function mynamespace:reset 20t','/schedule function mynamespace:reset 5s','/schedule clear mynamespace:reset'],note:'时间单位：t=tick（20t=1秒） · s 秒 · d 天'},
+{cmd:'/trigger',v:'java',cat:'红石',args:'<目标> add|set <数值>',desc:'（Java 版）让玩家（非管理员）触发计分板，常用于菜单。',ex:['/scoreboard objectives add 菜单 trigger','/trigger 菜单 set 1'],note:'玩家用 /trigger 触发，配合命令方块循环检测'},
+{cmd:'/team',v:'both',cat:'红石',args:'add|join|leave|modify|remove …',desc:'创建队伍并管理成员。',ex:['/team add 红队','/team join 红队 @s','/team modify 红队 color red','/team leave @s','/team remove 红队'],note:'可配合 /gamerule doFriendlyFire false 关闭友伤、/team modify 红队 seeFriendlyInvisibles true 看到隐身队友'},
+{cmd:'/tag',v:'java',cat:'红石',args:'<目标> add|remove|list <标签>',desc:'（Java 版）给实体打标签，便于选择器筛选。',ex:['/tag @s add 已领礼包','/tag @a remove 新手','/tag @e[type=zombie] add 精英'],note:'选择器里用：@a[tag=已领礼包]、@e[tag=!新手]'},
+{cmd:'/bossbar',v:'java',cat:'红石',args:'add|remove|set|get …',desc:'（Java 版）创建并控制 Boss 血条。',ex:['/bossbar add mynamespace:血条 "我的Boss"','/bossbar set mynamespace:血条 max 100','/bossbar set mynamespace:血条 value 50','/bossbar set mynamespace:血条 players @a','/bossbar set mynamespace:血条 visible true','/bossbar set mynamespace:血条 color red']},
+{cmd:'/tick',v:'java',cat:'红石',args:'rate <速率> | freeze | unfreeze | step',desc:'（Java 1.20.4+）控制游戏刻速率或冻结时间。',ex:['/tick rate 20','/tick freeze','/tick unfreeze','/tick step 100'],note:'/tick freeze 冻结后，生物和红石停止，但命令仍可执行'},
+
+/* ---------- 显示与聊天 ---------- */
+{cmd:'/tellraw',v:'both',cat:'显示',args:'<目标> <JSON文本>',desc:'向玩家发送富文本消息（颜色、点击、悬停）。',ex:['/tellraw @a {"text":"欢迎！","color":"gold","bold":true}','/tellraw @a [{"text":"点击传送","color":"green","clickEvent":{"action":"run_command","value":"/tp @s 0 64 0"}}]','/tellraw @a {"text":"提示","hoverEvent":{"action":"show_text","value":"悬停内容"}}'],note:'颜色：black dark_blue dark_green dark_aqua dark_red dark_purple gold gray dark_gray blue green aqua red light_purple yellow white。格式：bold italic underlined strikethrough obfuscated'},
+{cmd:'/title',v:'both',cat:'显示',args:'<目标> title|subtitle|actionbar <文本> | times <淡入> <停留> <淡出> | clear | reset',desc:'在屏幕中央显示标题。',ex:['/title @a title {"text":"游戏开始","color":"gold"}','/title @a subtitle {"text":"祝你好运"}','/title @a times 10 70 20','/title @a actionbar {"text":"血量偏低","color":"red"}','/title @a clear'],note:'times 单位为 tick（20t=1秒）。actionbar 显示在物品栏上方'},
+{cmd:'/say',v:'both',cat:'显示',args:'<消息>',desc:'以命令执行者名义广播消息。',ex:['/say 大家好'],note:'显示格式为 [执行者] 消息'},
+{cmd:'/msg',v:'both',cat:'显示',args:'<玩家> <消息>',desc:'私聊某玩家。',ex:['/msg Steve 你好','/tell @a 注意安全'],note:'/tell 和 /w 是别名'},
+{cmd:'/me',v:'both',cat:'显示',args:'<动作>',desc:'以第三人称显示动作。',ex:['/me 挥了挥手'],note:'显示格式：* Steve 挥了挥手'},
+{cmd:'/particle',v:'both',cat:'显示',args:'<粒子> [坐标] [扩散] [速度] [数量]',desc:'生成粒子效果。',ex:['/particle minecraft:flame ~ ~1 ~ 0.5 0.5 0.5 0.1 50','/particle minecraft:heart ~ ~2 ~','/particle minecraft:end_rod 0 64 0 1 1 1 0.1 100'],note:'常用粒子：flame 火焰、heart 爱心、smoke 烟、explosion 爆炸、portal 传送门、end_rod 末地烛光、dust 红色石粉、note 音符、dripping_lava 滴落岩浆'},
+{cmd:'/playsound',v:'both',cat:'显示',args:'<音效> <声道> <目标> [坐标] [音量] [音调]',desc:'播放音效。',ex:['/playsound minecraft:entity.player.levelup master @a ~ ~ ~ 1 1','/playsound minecraft:block.note_block.pling master @s ~ ~ ~ 2 1.5','/playsound minecraft:entity.lightning_bolt.thunder master @a ~ ~ ~'],note:'声道：master 主音量、music 音乐、record 唱片、weather 天气、block 方块、hostile 敌对生物、neutral 中立生物、player 玩家、ambient 环境、voice 语音'},
+{cmd:'/stopsound',v:'both',cat:'显示',args:'<目标> [声道] [音效]',desc:'停止正在播放的音效。',ex:['/stopsound @a','/stopsound @s music']},
+{cmd:'/camerashake',v:'bedrock',cat:'显示',args:'add <玩家> <强度> <时长> | stop <玩家>',desc:'（基岩版）让屏幕震动。',ex:['/camerashake add @s 0.5 2','/camerashake stop @s']},
+{cmd:'/music',v:'bedrock',cat:'显示',args:'play <曲目> [音量] [淡入] | queue | stop',desc:'（基岩版）控制背景音乐。',ex:['/music play cave','/music stop']},
+
+/* ---------- 服务器与管理 ---------- */
+{cmd:'/op',v:'both',cat:'管理',args:'<玩家>',desc:'授予管理员权限。',ex:['/op Steve']},
+{cmd:'/deop',v:'both',cat:'管理',args:'<玩家>',desc:'取消管理员权限。',ex:['/deop Steve']},
+{cmd:'/kick',v:'both',cat:'管理',args:'<玩家> [理由]',desc:'把玩家踢出服务器。',ex:['/kick Steve 请遵守规则']},
+{cmd:'/ban',v:'both',cat:'管理',args:'<玩家> [理由]',desc:'封禁玩家（按名字）。',ex:['/ban Steve 违规','/ban-ip 1.2.3.4','/pardon Steve','/banlist'],note:'/ban-ip 按 IP 封禁 · /pardon 解除封禁 · /banlist 查看封禁列表'},
+{cmd:'/whitelist',v:'both',cat:'管理',args:'add|remove|list|on|off|reload <玩家>',desc:'白名单管理。',ex:['/whitelist add Steve','/whitelist on','/whitelist list','/whitelist remove Steve']},
+{cmd:'/reload',v:'both',cat:'管理',args:'',desc:'重新加载数据包、函数与进度。',ex:['/reload'],note:'Java 版 reload 会重建命令树，基岩版用于重载行为包函数'},
+{cmd:'/defaultgamemode',v:'both',cat:'管理',args:'<模式>',desc:'设置新玩家进入时的默认模式。',ex:['/defaultgamemode survival','/defaultgamemode creative']},
+{cmd:'/save-all',v:'java',cat:'管理',args:'[flush]',desc:'（Java 版）立即保存世界。',ex:['/save-all','/save-all flush']},
+{cmd:'/stop',v:'both',cat:'管理',args:'',desc:'关闭服务器。',ex:['/stop'],note:'单人游戏执行会直接退出到标题界面'},
+{cmd:'/list',v:'both',cat:'管理',args:'[uuids]',desc:'列出在线玩家。',ex:['/list','/list uuids']},
+{cmd:'/setidletimeout',v:'java',cat:'管理',args:'<分钟>',desc:'（Java 版）设置挂机踢出时限。',ex:['/setidletimeout 30']},
+{cmd:'/setmaxplayers',v:'bedrock',cat:'管理',args:'<人数>',desc:'（基岩版）设置服务器最大人数。',ex:['/setmaxplayers 10']},
+{cmd:'/help',v:'both',cat:'管理',args:'[指令]',desc:'查看命令列表或某命令用法。',ex:['/help','/help give']},
+];
+
+/* ================= 状态与渲染 ================= */
+var state={v:'all',cat:'全部',q:''};
+var CATS=['全部','速查','基础','世界','物品','实体','方块','红石','显示','管理'];
+
+var listEl=document.getElementById('list');
+var chipsEl=document.getElementById('chips');
+var countEl=document.getElementById('count');
+var qEl=document.getElementById('q');
+var clearEl=document.getElementById('clear');
+var toastEl=document.getElementById('toast');
+
+function verLabel(v){
+  if(v==='java')return '<span class="badge java">JAVA</span>';
+  if(v==='bedrock')return '<span class="badge bedrock">基岩</span>';
+  return '<span class="badge both">通用</span>';
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function match(d){
+  if(state.v!=='all'&&d.v!=='both'&&d.v!==state.v)return false;
+  if(state.cat!=='全部'&&d.cat!==state.cat)return false;
+  if(!state.q)return true;
+  var q=state.q.toLowerCase();
+  var hay=(d.cmd+' '+d.args+' '+d.desc+' '+(d.note||'')+' '+(d.ex||[]).join(' ')+' '+d.cat).toLowerCase();
+  return hay.indexOf(q)>=0;
+}
+
+function cardHtml(d){
+  var exHtml=(d.ex||[]).map(function(e){
+    return '<div class="ex" data-copy="'+esc(e)+'"><span class="t">'+esc(e)+'</span><span class="c">点击复制</span></div>';
+  }).join('');
+  var argHtml=d.args?(' <span class="o">'+esc(d.args)+'</span>'):'';
+  return '<div class="card">'
+    +'<div class="row1"><div class="cmd">'+esc(d.cmd)+'</div>'+verLabel(d.v)
+    +'<button class="copy" data-copy="'+esc(d.cmd+(d.args?(' '+d.args):''))+'" title="复制语法">⧉</button></div>'
+    +'<div class="syntax"><span class="k">'+esc(d.cmd)+'</span>'+argHtml+'</div>'
+    +'<div class="desc">'+esc(d.desc)+'</div>'
+    +'<div class="exs">'+exHtml+'</div>'
+    +(d.note?'<div class="note">'+esc(d.note)+'</div>':'')
+    +'</div>';
+}
+
+function render(){
+  var arr=DATA.filter(match);
+  if(!arr.length){
+    listEl.innerHTML='<div class="empty"><div class="big">🔍</div>没有匹配的指令<br>换个关键词试试</div>';
+  }else{
+    listEl.innerHTML=arr.map(cardHtml).join('');
+  }
+  countEl.textContent='显示 '+arr.length+' 条'+(state.cat!=='全部'?(' · '+state.cat):'');
+  document.getElementById('total').textContent=DATA.length;
+}
+
+/* 复制 */
+function copy(text){
+  var done=function(){showToast('已复制：'+text.slice(0,28)+(text.length>28?'…':''));};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done,function(){fallback(text,done)});
+  }else fallback(text,done);
+}
+function fallback(text,done){
+  var ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');done();}catch(e){showToast('复制失败，请长按选择');}
+  document.body.removeChild(ta);
+}
+var toastTimer=null;
+function showToast(msg){
+  toastEl.textContent=msg;toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){toastEl.classList.remove('show')},1500);
+}
+
+/* 事件委托：复制 */
+listEl.addEventListener('click',function(e){
+  var el=e.target.closest('[data-copy]');
+  if(el){copy(el.getAttribute('data-copy'));}
+});
+
+/* 搜索 */
+qEl.addEventListener('input',function(){
+  state.q=this.value.trim();
+  clearEl.classList.toggle('show',!!state.q);
+  render();
+});
+clearEl.addEventListener('click',function(){
+  qEl.value='';state.q='';clearEl.classList.remove('show');render();qEl.focus();
+});
+
+/* 版本切换 */
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+    t.classList.add('on');state.v=t.getAttribute('data-v');render();
+  });
+});
+
+/* 分类 chips */
+CATS.forEach(function(c){
+  var el=document.createElement('div');
+  el.className='chip'+(c==='全部'?' on':'');
+  el.textContent=c;el.setAttribute('data-c',c);
+  el.addEventListener('click',function(){
+    document.querySelectorAll('.chip').forEach(function(x){x.classList.remove('on')});
+    el.classList.add('on');state.cat=c;render();
+  });
+  chipsEl.appendChild(el);
+});
+
+render();
+</script>
+</body>
+</html>
