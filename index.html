@@ -73,6 +73,45 @@ transition:.15s;
 .chip.on{background:#3a5a3d;color:#bfe3c1;border-color:#5dbb63}
 .count{padding:6px 16px 2px;font-size:11px;color:#6a6a78}
 
+/* ===== 命令方块生成器 ===== */
+.gen{margin:0 16px 10px;border:1px solid #3a4a3a;border-radius:12px;overflow:hidden;background:#232b23}
+.gen-head{
+display:flex;align-items:center;justify-content:space-between;
+padding:11px 13px;font-size:13px;font-weight:700;color:#bfe3c1;cursor:pointer;
+background:#2a3a2a;user-select:none;
+}
+.gen-head .arw{transition:transform .2s;font-size:12px}
+.gen.open .gen-head .arw{transform:rotate(180deg)}
+.gen-body{display:none;padding:12px 13px 13px}
+.gen.open .gen-body{display:block}
+.grow{margin-bottom:9px}
+.grow label{display:block;font-size:11px;color:#8aa88a;margin-bottom:5px;font-weight:600}
+.opts{display:flex;gap:6px}
+.opt{
+flex:1;text-align:center;padding:7px 0;border-radius:8px;font-size:12px;font-weight:600;
+background:#2a2a30;color:#9a9aa6;cursor:pointer;border:1px solid #33333c;transition:.14s;
+}
+.opt.on{background:#5dbb63;color:#16301a;border-color:#5dbb63}
+.gen-body select,.gen-body input,.gen-body textarea{
+width:100%;background:#2a2a30;border:1px solid #33333c;border-radius:8px;
+color:#e6e6e6;font-size:13px;padding:8px 10px;outline:none;font-family:inherit;resize:vertical;
+}
+.gen-body textarea{font-family:"SF Mono",Consolas,monospace;font-size:12.5px;line-height:1.6}
+.gen-body select:focus,.gen-body input:focus,.gen-body textarea:focus{border-color:#5dbb63}
+.out{background:#1b1b20;border:1px solid #33333c;border-radius:9px;padding:9px 10px;margin-top:4px}
+.out-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.out-h span{font-size:10px;color:#6a6a78;font-weight:700;letter-spacing:.5px}
+.copy2{
+border:none;background:#3a3a44;color:#c8c8d0;font-size:11px;font-weight:700;
+padding:4px 11px;border-radius:6px;cursor:pointer;
+}
+.copy2:active{background:#5dbb63;color:#16301a}
+#gOut{
+display:block;font-size:12px;color:#a8e8a8;word-break:break-all;line-height:1.7;
+font-family:"SF Mono",Consolas,monospace;
+}
+.gtip{font-size:11px;color:#7a8a7a;line-height:1.7;margin-top:8px}
+
 /* ===== 卡片 ===== */
 main{padding:8px 16px calc(30px + env(safe-area-inset-bottom))}
 .card{
@@ -166,6 +205,60 @@ opacity:0;pointer-events:none;transition:.28s;z-index:99;
 </div>
 <div class="chips" id="chips"></div>
 <div class="count" id="count"></div>
+</div>
+
+<div class="gen">
+<div class="gen-head" id="genToggle">
+<span>🛠 命令方块生成器</span><span class="arw">▾</span>
+</div>
+<div class="gen-body" id="genBody">
+<div class="grow">
+<label>类型</label>
+<div class="opts" data-g="type">
+<div class="opt on" data-val="command_block">脉冲</div>
+<div class="opt" data-val="chain_command_block">链</div>
+<div class="opt" data-val="repeating_command_block">循环</div>
+</div>
+</div>
+<div class="grow">
+<label>条件</label>
+<div class="opts" data-g="cond">
+<div class="opt on" data-val="false">无条件</div>
+<div class="opt" data-val="true">条件制约</div>
+</div>
+</div>
+<div class="grow">
+<label>红石</label>
+<div class="opts" data-g="auto">
+<div class="opt" data-val="0">需红石</div>
+<div class="opt on" data-val="1">保持开启</div>
+</div>
+</div>
+<div class="grow">
+<label>朝向</label>
+<select id="gFacing">
+<option value="up">上 up</option>
+<option value="down">下 down</option>
+<option value="north" selected>北 north</option>
+<option value="south">南 south</option>
+<option value="east">东 east</option>
+<option value="west">西 west</option>
+</select>
+</div>
+<div class="grow">
+<label>坐标</label>
+<input id="gPos" value="~ ~1 ~" spellcheck="false">
+</div>
+<div class="grow">
+<label>命令内容（不带斜杠）</label>
+<textarea id="gCmd" rows="2" placeholder="say 你好" spellcheck="false"></textarea>
+</div>
+<div class="out">
+<div class="out-h"><span>生成结果</span><button class="copy2" id="gCopy">复制</button></div>
+<code id="gOut">/setblock ~ ~1 ~ minecraft:command_block[conditional=false,facing=north]{Command:"",auto:1b}</code>
+</div>
+<p class="gtip">脉冲＝红石触发一次 · 链＝前一个指向它时执行 · 循环＝保持开启时每 tick 执行（1 秒 20 次）。条件制约需前一个命令方块返回成功才执行。</p>
+</div>
 </div>
 
 <main id="list"></main>
@@ -279,11 +372,27 @@ var DATA=[
 {cmd:'/setidletimeout',v:'java',cat:'管理',args:'<分钟>',desc:'（Java 版）设置挂机踢出时限。',ex:['/setidletimeout 30']},
 {cmd:'/setmaxplayers',v:'bedrock',cat:'管理',args:'<人数>',desc:'（基岩版）设置服务器最大人数。',ex:['/setmaxplayers 10']},
 {cmd:'/help',v:'both',cat:'管理',args:'[指令]',desc:'查看命令列表或某命令用法。',ex:['/help','/help give']},
+
+/* ---------- 命令方块 ---------- */
+{cmd:'/setblock command_block',v:'java',cat:'命令方块',args:'<坐标> <命令方块类型>[方块状态]{NBT}',desc:'放置一个带命令的命令方块。Java 版可在 setblock 里直接写入 Command 与 auto。',ex:['/setblock ~ ~1 ~ minecraft:command_block{Command:"say 你好"}','/setblock ~ ~ ~ minecraft:chain_command_block[conditional=true,facing=east]{Command:"say 条件成立",auto:1b}','/setblock 0 64 0 minecraft:repeating_command_block{Command:"scoreboard players add @a 在线 1",auto:1b}','/setblock ~ ~ ~ minecraft:command_block[conditional=false,facing=up]{Command:"give @a diamond 1",auto:0b}'],note:'三种类型：command_block 脉冲（收到红石信号执行一次）· chain_command_block 链（由前一个指向它时执行，绿色箭头方向）· repeating_command_block 循环（保持开启时每 tick 执行，1 秒 20 次）。方块状态：conditional=true 条件制约（需前一个返回成功才执行）· facing=north/south/east/west/up/down 朝向。NBT：Command 内写命令 · auto:1b 保持开启、auto:0b 需红石。命令里含双引号要用 \\" 转义'},
+{cmd:'/data merge block',v:'java',cat:'命令方块',args:'<坐标> {NBT}',desc:'直接改写命令方块里的内容，不用重新放置。',ex:['/data merge block ~ ~ ~ {Command:"say 新命令"}','/data merge block 100 64 100 {auto:1b}','/data merge block ~ ~ ~ {Command:"",auto:0b}'],note:'查看当前命令：/data get block ~ ~ ~ Command。整块读取：/data get block ~ ~ ~。移除某项：/data remove block ~ ~ ~ Command。旧版（1.7–1.12）用 /blockdata <坐标> {Command:"…"}'},
+{cmd:'/blockdata',v:'java',cat:'命令方块',args:'<坐标> {NBT}',desc:'（Java 1.7–1.12 旧版）修改方块 NBT，含命令方块内容。1.13 起被 /data 取代。',ex:['/blockdata 0 64 0 {Command:"say hi"}','/blockdata ~ ~1 ~ {auto:1b}']},
+{cmd:'/gamerule commandBlockOutput',v:'both',cat:'命令方块',args:'<true|false>',desc:'关闭命令方块在聊天栏的执行回显，避免刷屏。',ex:['/gamerule commandBlockOutput false','/gamerule commandBlockOutput true'],note:'连锁命令方块时强烈建议设为 false，否则聊天栏会被"命令方块执行成功"刷爆'},
+{cmd:'/gamerule maxCommandChainLength',v:'java',cat:'命令方块',args:'<数值>',desc:'（Java 版）设置单次可执行的命令链最大长度，默认 65536。',ex:['/gamerule maxCommandChainLength 65536','/gamerule maxCommandChainLength 100'],note:'连锁命令方块数量很多时可适当调高'},
+{cmd:'/gamerule sendCommandFeedback',v:'java',cat:'命令方块',args:'<true|false>',desc:'（Java 版）关闭所有命令的回显反馈（含玩家自己的）。',ex:['/gamerule sendCommandFeedback false'],note:'和 commandBlockOutput 不同：这个连玩家自己执行命令的提示也一起关掉'},
+{cmd:'/testfor',v:'java',cat:'命令方块',args:'<目标> [数据]',desc:'（Java 1.12– 旧版）检测实体是否存在，配合比较器输出红石信号。1.13 起已移除，改用 /execute。',ex:['/testfor @a[score_金币_min=10]','/testfor @e[type=zombie,r=5]','/testfor @p[x=0,y=64,z=0,r=3]'],note:'现代替代写法：/execute if entity @a[scores={金币=10..}] run say 有人够了。旧版分数判据是 score_金币_min=10，新版是 scores={金币=10..}'},
+{cmd:'/testforblock',v:'java',cat:'命令方块',args:'<坐标> <方块> [数据值] [数据标签]',desc:'（Java 1.12– 旧版）检测某坐标是否为指定方块。1.13 起改用 /execute if block。',ex:['/testforblock 0 64 0 minecraft:stone','/testforblock ~ ~-1 ~ minecraft:chest'],note:'现代替代：/execute if block 0 64 0 minecraft:stone run say 是石头'},
+{cmd:'/testforblocks',v:'java',cat:'命令方块',args:'<起点> <终点> <对比坐标> [模式]',desc:'（Java 1.12– 旧版）对比两块区域是否完全一致。1.13 起用 /execute if blocks。',ex:['/testforblocks 0 64 0 0 64 0 100 64 100'],note:'现代替代：/execute if blocks 0 64 0 0 64 0 100 64 100 all run say 一致'},
+{cmd:'/stats',v:'java',cat:'命令方块',args:'entity|block <目标> set|clear <类型> <记分目标> <目标>',desc:'（Java 1.12– 旧版）把命令执行结果写进计分板。1.13 起改用 /execute store。',ex:['/stats entity @s set QueryResult @s 结果','/stats block 0 64 0 set SuccessCount @s 成功次数'],note:'现代替代：/execute store result score @s 结果 run data get entity @s Health。类型：QueryResult 查询结果、SuccessCount 成功次数、AffectedBlocks 影响方块数、AffectedEntities 影响实体数、AffectedItems 影响物品数'},
+{cmd:'/scoreboard players test',v:'java',cat:'命令方块',args:'<目标> <记分项> <最小值> [最大值]',desc:'（Java 1.12– 旧版）判断分数是否在区间内。1.13 起改用 /execute if score。',ex:['/scoreboard players test @s 金币 10 999','/scoreboard players test @a 等级 5 *'],note:'现代替代：/execute if score @s 金币 matches 10..999 run say 金币够了。* 表示不限上限'},
+{cmd:'/execute if',v:'both',cat:'命令方块',args:'if|unless <entity|block|blocks|score|data|dimension|predicate> … run <命令>',desc:'现代命令方块的灵魂：条件判断。取代了旧版的 testfor / testforblock / stats。',ex:['/execute if entity @a[scores={金币=10..}] run say 有人金币够了','/execute unless entity @e[type=creeper] run say 没有苦力怕','/execute if block ~ ~-1 ~ minecraft:stone run give @s diamond 1','/execute if score @s 等级 matches 5..10 run say 等级达标','/execute as @a at @s if block ~ ~-1 ~ minecraft:gold_block run effect give @s speed 5 1'],note:'if 成立才执行 · unless 不成立才执行。放在循环命令方块里就是"每 tick 检测一次"。配合条件制约链（conditional）可实现"检测→成功→执行"的经典结构'},
+{cmd:'/clone 复制命令方块',v:'both',cat:'命令方块',args:'<起点> <终点> <目标> [masked|filtered]',desc:'复制命令方块及其内容，用于批量布置结构。',ex:['/clone 0 64 0 0 64 0 100 64 100','/fill 0 64 0 10 74 10 minecraft:air replace minecraft:command_block'],note:'注意：clone 会连同 Command 内容一起复制。清空一片命令方块：/fill <起> <终> minecraft:air replace minecraft:command_block'},
+{cmd:'/give 命令方块',v:'both',cat:'命令方块',args:'<玩家> <命令方块类型>',desc:'获取命令方块物品（放置后可用）。',ex:['/give @s minecraft:command_block','/give @s minecraft:chain_command_block','/give @s minecraft:repeating_command_block'],note:'命令方块无法在生存模式破坏，只有创造模式+管理员能放置和修改'},
 ];
 
 /* ================= 状态与渲染 ================= */
 var state={v:'all',cat:'全部',q:''};
-var CATS=['全部','速查','基础','世界','物品','实体','方块','红石','显示','管理'];
+var CATS=['全部','速查','基础','世界','物品','实体','方块','红石','命令方块','显示','管理'];
 
 var listEl=document.getElementById('list');
 var chipsEl=document.getElementById('chips');
@@ -390,6 +499,48 @@ CATS.forEach(function(c){
   });
   chipsEl.appendChild(el);
 });
+
+/* ================= 命令方块生成器 ================= */
+var genEl=document.getElementById('genToggle').parentNode;
+var gOut=document.getElementById('gOut');
+var gCmd=document.getElementById('gCmd');
+var gPos=document.getElementById('gPos');
+var gFacing=document.getElementById('gFacing');
+var G={type:'command_block',cond:'false',auto:'1'};
+
+document.getElementById('genToggle').addEventListener('click',function(){
+  genEl.classList.toggle('open');
+});
+
+document.querySelectorAll('.opts').forEach(function(box){
+  var key=box.getAttribute('data-g');
+  box.addEventListener('click',function(e){
+    var o=e.target.closest('.opt');
+    if(!o)return;
+    box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on')});
+    o.classList.add('on');
+    G[key]=o.getAttribute('data-val');
+    build();
+  });
+});
+[gCmd,gPos,gFacing].forEach(function(el){
+  el.addEventListener('input',build);
+  el.addEventListener('change',build);
+});
+
+function build(){
+  var cmd=gCmd.value.replace(/"/g,'\\"');
+  var pos=gPos.value.trim()||'~ ~ ~';
+  var out='/setblock '+pos+' minecraft:'+G.type
+    +'[conditional='+G.cond+',facing='+gFacing.value+']'
+    +'{Command:"'+cmd+'",auto:'+G.auto+'b}';
+  gOut.textContent=out;
+  return out;
+}
+document.getElementById('gCopy').addEventListener('click',function(){
+  copy(build());
+});
+build();
 
 render();
 </script>
