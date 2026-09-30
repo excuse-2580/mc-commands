@@ -181,6 +181,260 @@ padding:10px 20px;border-radius:22px;
 opacity:0;pointer-events:none;transition:.28s;z-index:99;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ============================================================
+   Material Design 3 设计系统覆盖
+   配色：MD3 dark theme，primary 取自 MC 绿 seed
+   ============================================================ */
+:root{
+  --md-primary:#7fd67f;
+  --md-on-primary:#0f3515;
+  --md-primary-container:#2a5230;
+  --md-on-primary-container:#b9f0bb;
+  --md-secondary:#a8cf9a;
+  --md-tertiary:#efb8a0;
+
+  --md-surface:#141218;
+  --md-surface-dim:#141218;
+  --md-surface-container-lowest:#0f0d13;
+  --md-surface-container-low:#1d1b22;
+  --md-surface-container:#211f26;
+  --md-surface-container-high:#2b2932;
+  --md-surface-container-highest:#36343d;
+
+  --md-on-surface:#e6e0e9;
+  --md-on-surface-variant:#cac4d0;
+  --md-outline-variant:#49454f;
+  --md-outline:#938f99;
+  --md-inverse-surface:#e6e0e9;
+  --md-inverse-on-surface:#322f35;
+
+  --md-elev-1:0 1px 2px rgba(0,0,0,.3),0 1px 3px 1px rgba(0,0,0,.15);
+  --md-elev-2:0 1px 2px rgba(0,0,0,.3),0 2px 6px 2px rgba(0,0,0,.15);
+
+  --md-xs:4px; --md-s:8px; --md-m:12px; --md-l:16px;
+  --md-r-xs:4px; --md-r-s:8px; --md-r-m:12px; --md-r-l:16px; --md-r-xl:28px;
+  --md-easing:cubic-bezier(.2,0,0,1);
+  --md-motion:200ms;
+}
+body{
+  background:var(--md-surface);
+  color:var(--md-on-surface);
+  font-family:Roboto,"Noto Sans SC",-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:14px;line-height:1.6;letter-spacing:.1px;
+}
+
+/* --- MD3 Top App Bar（滚动时升 elevation） --- */
+header{
+  background:var(--md-surface-container);
+  padding:calc(var(--md-m) + env(safe-area-inset-top)) var(--md-l) var(--md-m);
+  box-shadow:none;border-bottom:1px solid var(--md-outline-variant);
+  transition:box-shadow var(--md-motion) var(--md-easing);
+}
+header.scrolled{box-shadow:var(--md-elev-2);background:var(--md-surface-container-high)}
+.logo{
+  width:36px;height:36px;border-radius:var(--md-r-m);
+  background:var(--md-primary-container);color:var(--md-on-primary-container);
+  box-shadow:none;font-size:18px;
+}
+header h1{font-size:17px;letter-spacing:.15px;color:var(--md-on-surface)}
+header h1 small{color:var(--md-on-surface-variant);font-size:11px;letter-spacing:.4px}
+
+/* --- MD3 Search Bar（全圆角 filled text field） --- */
+#q{
+  height:52px;border-radius:var(--md-r-xl);
+  background:var(--md-surface-container-high);
+  border:1px solid transparent;
+  padding:0 46px 0 44px;font-size:15px;
+  color:var(--md-on-surface);
+  transition:background var(--md-motion) var(--md-easing),border-color var(--md-motion) var(--md-easing);
+}
+#q::placeholder{color:var(--md-outline)}
+#q:focus{
+  background:var(--md-surface-container-high);
+  border-color:var(--md-primary);
+  box-shadow:0 0 0 1px var(--md-primary);
+}
+.searchwrap .ic{left:16px;color:var(--md-on-surface-variant);font-size:15px}
+#clear{
+  width:36px;height:36px;background:transparent;color:var(--md-on-surface-variant);
+  font-size:14px;right:8px;
+}
+#clear:active{background:var(--md-surface-container-highest)}
+
+/* --- MD3 Segmented Button / Tab --- */
+.bars{
+  background:var(--md-surface);
+  padding:var(--md-s) 0 var(--md-xs);
+  border-bottom:1px solid var(--md-outline-variant);
+}
+.tabs{gap:var(--md-xs);padding:0 var(--md-l)}
+.tab{
+  border-radius:var(--md-r-xl);height:40px;line-height:40px;padding:0;
+  background:transparent;color:var(--md-on-surface-variant);
+  border:1px solid var(--md-outline-variant);
+  font-size:13px;font-weight:600;letter-spacing:.5px;
+  transition:background var(--md-motion) var(--md-easing),color var(--md-motion) var(--md-easing);
+  position:relative;overflow:hidden;
+}
+.tab:active{background:color-mix(in srgb,var(--md-on-surface) 8%,transparent)}
+.tab.on{
+  background:var(--md-primary-container);color:var(--md-on-primary-container);
+  border-color:transparent;
+}
+
+/* --- MD3 Filter Chip --- */
+.chips{padding:var(--md-s) var(--md-l) var(--md-xs);gap:var(--md-s)}
+.chip{
+  height:32px;padding:0 16px;border-radius:var(--md-r-s);
+  background:var(--md-surface-container-high);
+  color:var(--md-on-surface-variant);
+  border:1px solid var(--md-outline-variant);
+  font-size:12.5px;font-weight:500;line-height:30px;
+  transition:background var(--md-motion) var(--md-easing),border-color var(--md-motion) var(--md-easing);
+}
+.chip:active{background:var(--md-surface-container-highest)}
+.chip.on{
+  background:var(--md-primary-container);color:var(--md-on-primary-container);
+  border-color:transparent;
+}
+.count{padding:var(--md-xs) var(--md-l) var(--md-s);color:var(--md-outline);font-size:11.5px;letter-spacing:.4px}
+
+/* --- MD3 Filled Card --- */
+main{padding:var(--md-s) var(--md-l) calc(28px + env(safe-area-inset-bottom))}
+.card{
+  background:var(--md-surface-container-low);
+  border:1px solid var(--md-outline-variant);
+  border-radius:var(--md-r-m);
+  padding:var(--md-m) var(--md-l) var(--md-m);
+  margin-bottom:var(--md-m);
+  box-shadow:none;
+  transition:box-shadow var(--md-motion) var(--md-easing),background var(--md-motion) var(--md-easing);
+}
+.card:hover{box-shadow:var(--md-elev-1)}
+.cmd{font-size:15.5px;color:var(--md-primary);letter-spacing:0}
+.badge{border-radius:var(--md-r-xs);font-weight:700;font-size:9.5px;letter-spacing:.6px;padding:4px 8px}
+.badge.java{background:#3b4a6b;color:#b3c8ef}
+.badge.bedrock{background:#5b4636;color:#f2cba6}
+.badge.both{background:var(--md-primary-container);color:var(--md-on-primary-container)}
+.copy{
+  width:36px;height:36px;border-radius:var(--md-r-m);
+  background:transparent;color:var(--md-on-surface-variant);font-size:15px;
+}
+.copy:active{background:var(--md-primary-container);color:var(--md-on-primary-container);transform:scale(.94)}
+
+/* --- MD3 语法块（filled container） --- */
+.syntax{
+  background:var(--md-surface-container-high);
+  border:1px solid transparent;border-radius:var(--md-r-s);
+  padding:var(--md-m) var(--md-m);font-size:12.5px;line-height:1.8;
+  color:var(--md-on-surface);letter-spacing:0;
+}
+.syntax .k{color:var(--md-primary);font-weight:700}
+.syntax .o{color:var(--md-on-surface-variant)}
+.desc{color:var(--md-on-surface-variant);font-size:13.5px;line-height:1.75}
+
+/* --- MD3 示例项（state layer） --- */
+.ex{
+  background:var(--md-surface-container);
+  border:1px solid var(--md-outline-variant);border-radius:var(--md-r-s);
+  padding:var(--md-m) var(--md-m);
+  transition:background var(--md-motion) var(--md-easing),border-color var(--md-motion) var(--md-easing);
+}
+.ex:active{background:var(--md-primary-container);border-color:transparent}
+.ex:active .t{color:var(--md-on-primary-container)}
+.ex:active .c{color:var(--md-on-primary-container)}
+.ex .t{color:#9fc7e8;font-size:12.5px;letter-spacing:0}
+.ex .c{color:var(--md-outline);font-size:10px;font-weight:600;letter-spacing:.4px}
+
+/* --- MD3 备注（tonal container） --- */
+.note{
+  background:var(--md-surface-container-high);
+  border-left:none;border-radius:var(--md-r-s);
+  border-top:2px solid var(--md-tertiary);
+  padding:var(--md-m);font-size:12px;line-height:1.75;
+  color:var(--md-on-surface-variant);
+  margin-top:var(--md-m);
+}
+
+/* --- 大白话块（MD3 outlined card，primary 强调） --- */
+.plain{
+  background:var(--md-primary-container);
+  border-radius:var(--md-r-s);
+  padding:var(--md-m) var(--md-m);
+  margin-bottom:var(--md-m);
+  display:flex;gap:var(--md-s);align-items:flex-start;
+}
+.plain .pi{
+  flex:0 0 auto;width:20px;height:20px;border-radius:50%;
+  background:var(--md-primary);color:var(--md-on-primary);
+  font-size:11px;font-weight:800;display:grid;place-items:center;
+  margin-top:1px;
+}
+.plain .pt{
+  flex:1;font-size:13px;line-height:1.75;
+  color:var(--md-on-primary-container);font-weight:500;
+}
+
+/* --- MD3 生成器（outlined card） --- */
+.gen{
+  margin:0 var(--md-l) var(--md-m);
+  border:1px solid var(--md-outline-variant);border-radius:var(--md-r-m);
+  background:var(--md-surface-container-low);box-shadow:none;
+}
+.gen-head{
+  padding:var(--md-m) var(--md-l);
+  background:transparent;color:var(--md-primary);
+  font-size:13.5px;letter-spacing:.3px;
+}
+.gen-head:active{background:color-mix(in srgb,var(--md-primary) 10%,transparent)}
+.gen-body{padding:0 var(--md-l) var(--md-l)}
+.grow label{color:var(--md-on-surface-variant);font-size:11.5px;font-weight:600;letter-spacing:.5px}
+.opt{
+  border-radius:var(--md-r-s);height:38px;line-height:36px;padding:0;
+  background:var(--md-surface-container-high);
+  border:1px solid var(--md-outline-variant);
+  color:var(--md-on-surface-variant);font-size:12.5px;
+  transition:background var(--md-motion) var(--md-easing),color var(--md-motion) var(--md-easing);
+}
+.opt.on{background:var(--md-primary);color:var(--md-on-primary);border-color:transparent}
+.gen-body select,.gen-body input,.gen-body textarea{
+  background:var(--md-surface-container-high);
+  border:1px solid var(--md-outline-variant);border-radius:var(--md-r-s);
+  color:var(--md-on-surface);padding:var(--md-m);font-size:13.5px;
+}
+.gen-body select:focus,.gen-body input:focus,.gen-body textarea:focus{
+  border-color:var(--md-primary);box-shadow:0 0 0 1px var(--md-primary);
+}
+.out{background:var(--md-surface-container-highest);border:1px solid transparent;border-radius:var(--md-r-s);padding:var(--md-m)}
+.out-h span{color:var(--md-outline);font-size:10px;letter-spacing:.8px}
+.copy2{
+  border-radius:var(--md-r-xl);background:var(--md-primary);color:var(--md-on-primary);
+  font-size:11.5px;font-weight:600;padding:6px 16px;letter-spacing:.5px;
+}
+#gOut{color:var(--md-primary);font-size:12px;line-height:1.8}
+.gtip{color:var(--md-outline);font-size:11.5px;line-height:1.75}
+
+/* --- MD3 Snackbar（toast） --- */
+.toast{
+  background:var(--md-inverse-surface);color:var(--md-inverse-on-surface);
+  border-radius:var(--md-r-s);font-size:13px;font-weight:500;
+  padding:14px 16px;bottom:calc(var(--md-l) + env(safe-area-inset-bottom));
+  box-shadow:var(--md-elev-2);max-width:90vw;text-align:center;
+}
+
+.empty{color:var(--md-outline);font-size:14px;padding:56px 20px}
+.empty .big{font-size:36px;margin-bottom:var(--md-m);opacity:.6}
+footer{
+  color:var(--md-outline);font-size:11.5px;line-height:1.9;
+  border-top:1px solid var(--md-outline-variant);padding:var(--md-l);
+}
+footer b{color:var(--md-on-surface-variant);font-weight:600}
+
+/* MD3 motion：尊重系统减少动画 */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
 </style>
 </head>
 <body>
@@ -390,6 +644,111 @@ var DATA=[
 {cmd:'/give 命令方块',v:'both',cat:'命令方块',args:'<玩家> <命令方块类型>',desc:'获取命令方块物品（放置后可用）。',ex:['/give @s minecraft:command_block','/give @s minecraft:chain_command_block','/give @s minecraft:repeating_command_block'],note:'命令方块无法在生存模式破坏，只有创造模式+管理员能放置和修改'},
 ];
 
+/* ================= 大白话：每条命令用一句人话说明 ================= */
+var PLAIN={
+/* 速查 */
+'@p':'离你最近的那个人。',
+'@a':'在这世界里、现在在线的所有玩家，一个都不落。',
+'@e':'所有"活的东西"，包括怪、动物、地上的掉落物、射出去的箭。',
+'@s':'就是你自己（谁执行这条命令谁就是 @s）。',
+'~ ~ ~':'以你脚底下为起点算位置，不用查坐标。~5 就是往这边再挪 5 格。',
+/* 基础 */
+'/gamemode':'切换模式：能飞能拿无限东西（创造），还是要自己砍树打怪（生存）。',
+'/give':'直接塞东西给你，不用去挖。',
+'/clear':'清空你背包（或只清掉某一样东西）。',
+'/kill':'让谁立刻死掉。对自己用就是自杀重生。',
+'/tp':'瞬移。可以直接飞到坐标，也可以飞到别人身边。',
+'/teleport':'瞬移的完整写法，还能顺带指定落地后脸朝哪边。',
+'/gamerule':'改这个世界的规则，比如死了掉不掉东西、天黑不黑、刷不刷怪。',
+'/difficulty':'调难度。和平模式不掉血也不刷怪，困难模式怪狠很多。',
+'/xp':'给你经验值，可以直接升好几级。',
+'/effect':'给你加状态，比如跑得快、跳得高、水下能呼吸。',
+'/enchant':'给手里拿的东西附魔，不用跑去附魔台。',
+'/damage':'直接扣血，还能指定是摔死的还是被打死的。',
+'/attribute':'改你本身的能力，比如血量上限、跑多快、打多疼。',
+/* 世界 */
+'/time':'调时间。想天亮就天亮，想永远是白天也行。',
+'/weather':'调天气。下雨、打雷、放晴随你选。',
+'/seed':'看看这个世界的种子号是多少，可以分享给别人。',
+'/locate':'帮你找东西在哪，比如最近的村庄、要塞、下界堡垒。',
+'/setworldspawn':'设定整个世界"出生点"在哪，新来的都从这出现。',
+'/spawnpoint':'设定你自己死了以后从哪复活（床也能干这事）。',
+'/worldborder':'给世界画个圈，跑出去会被挡住（Java 版）。',
+'/tickingarea':'划一块地，就算你走远了它照样自己运转（基岩版）。',
+'/forceload':'让某块地一直保持加载，你不在那也照样算（Java 版）。',
+'/mobevent':'控制某些事件会不会发生，比如劫掠队来不来袭击（基岩版）。',
+'/fillbiome':'把一片地方改成别的地形，比如把沙漠变成平原（Java 版）。',
+/* 物品 */
+'/item':'精确地把东西放进你身上某个格子，比如直接戴头上、拿手上。',
+'/replaceitem':'把某个格子里的东西换掉（基岩版写法）。',
+'/loot':'按游戏里的"抽奖表"直接开箱，比如直接拿末地城的宝藏。',
+'/recipe':'解锁或收回合成配方，可以一下子把全部配方都给你。',
+'/advancement':'给或收回进度（就是那些" advancements "成就）。',
+/* 实体 */
+'/summon':'凭空变出东西来，怪、动物、闪电、甚至地上的钻石都行。',
+'/execute':'最强大也最绕的一条：让某某人、在某位置、满足某某条件时，去执行另一条命令。',
+'/data':'直接读写一个东西的底层数据，比如让怪不动、不掉东西、无敌。',
+'/spectate':'用别人的眼睛看世界，视角跟着他走（Java 版）。',
+'/ability':'给玩家开特权，比如让他能飞、打不死（基岩版）。',
+/* 方块 */
+'/setblock':'放一个方块。就一个。',
+'/fill':'一次性填满一整块区域，比如秒铺一片地板、秒挖一个洞。',
+'/clone':'把一块地方原样复制到别处，用来搞对称建筑最方便。',
+'/place':'直接放一个现成的建筑或地形，比如整棵树、整个村庄（Java 版）。',
+'/structure':'把你搭好的东西存起来，之后在哪都能再放一份（基岩版）。',
+/* 红石 */
+'/scoreboard':'记分板。给每个玩家挂个"变量"，能记金币、记死亡数，还能显示在屏幕右边。',
+'/execute store':'把一条命令的结果存进计分板，比如把血量存成数字。',
+'/function':'把一大堆命令打包成一个文件，一条命令全跑完。',
+'/datapack':'查看和开关数据包（Java 版）。',
+'/schedule':'让命令等一会儿再执行，比如 5 秒后重置。',
+'/trigger':'让玩家自己按个按钮就能触发，不需要管理员权限。',
+'/team':'分队。分完可以关友军伤害、让队友看得到隐身的你。',
+'/tag':'给别人贴标签，方便之后按标签筛选。',
+'/bossbar':'在屏幕顶上搞一条血条，可以写自己的字、显示自己的进度。',
+'/tick':'控制游戏时间流速，能调快、调慢，甚至整个冻住。',
+/* 命令方块 */
+'/setblock command_block':'放一个会自动干活的命令方块，连命令一起写进去。',
+'/data merge block':'改命令方块里的内容，不用把方块拆了重放。',
+'/blockdata':'老版本改方块数据的命令，1.13 之后被 /data 取代了。',
+'/gamerule commandBlockOutput':'关掉命令方块在聊天栏刷屏。开循环方块必关，不然会卡死。',
+'/gamerule maxCommandChainLength':'一次最多能连多少个命令方块，默认 65536 个。',
+'/gamerule sendCommandFeedback':'把包括你自己在内的所有命令提示都关掉。',
+'/testfor':'老版本的"检测有没有这个东西"，现在被 /execute if 取代了。',
+'/testforblock':'老版本的"检测这个位置是不是这个方块"，现在用 /execute if block。',
+'/testforblocks':'老版本的"对比两块地一不一样"，现在用 /execute if blocks。',
+'/stats':'老版本的"把命令结果存进计分板"，现在用 /execute store。',
+'/scoreboard players test':'老版本的"判断分数在不在某个范围"，现在用 /execute if score。',
+'/execute if':'现代命令方块的灵魂：满足条件才干活，不满足就不干。取代了老版本那一堆 testfor。',
+'/clone 复制命令方块':'把命令方块连内容一起复制走，批量布置用。',
+'/give 命令方块':'给自己拿一个命令方块（只有创造模式加管理员能用）。',
+/* 显示 */
+'/tellraw':'在聊天栏发一条花里胡哨的消息，能带颜色、能点、能悬停显示字。',
+'/title':'在屏幕正中间打一行大字，做开场标题最常用。',
+'/say':'以你的名义在世界频道喊一句。',
+'/msg':'私聊某个人，只有他能看到。',
+'/me':'以第三人称描述你的动作，比如"* 小明 挥了挥手"。',
+'/particle':'放粒子特效，爱心、火焰、烟雾随便挑。',
+'/playsound':'播放音效，升级声、打雷声都行。',
+'/stopsound':'把正在响的音效掐掉。',
+'/camerashake':'让屏幕抖一下，地震、爆炸特别带感（基岩版）。',
+'/music':'控制背景音乐放什么、停不停（基岩版）。',
+/* 管理 */
+'/op':'给某人管理员权限。',
+'/deop':'收回某人的管理员权限。',
+'/kick':'把某人踢出去，他还能再进来。',
+'/ban':'封掉某人，他再也进不来（/pardon 是解封）。',
+'/whitelist':'白名单：只让名单上的人进来。',
+'/reload':'重新加载数据包和函数，改完不用重启。',
+'/defaultgamemode':'设定新人一进来默认是什么模式。',
+'/save-all':'立刻存档，怕崩档就用（Java 版）。',
+'/stop':'关服务器。单人用了直接回标题界面。',
+'/list':'看看现在都有谁在线。',
+'/setidletimeout':'挂机多久自动踢出去（Java 版）。',
+'/setmaxplayers':'设定服务器最多能进多少人（基岩版）。',
+'/help':'查命令列表，或者查某条命令怎么用。',
+};
+
 /* ================= 状态与渲染 ================= */
 var state={v:'all',cat:'全部',q:''};
 var CATS=['全部','速查','基础','世界','物品','实体','方块','红石','命令方块','显示','管理'];
@@ -413,7 +772,7 @@ function match(d){
   if(state.cat!=='全部'&&d.cat!==state.cat)return false;
   if(!state.q)return true;
   var q=state.q.toLowerCase();
-  var hay=(d.cmd+' '+d.args+' '+d.desc+' '+(d.note||'')+' '+(d.ex||[]).join(' ')+' '+d.cat).toLowerCase();
+  var hay=(d.cmd+' '+d.args+' '+d.desc+' '+(d.note||'')+' '+(d.ex||[]).join(' ')+' '+d.cat+' '+(PLAIN[d.cmd]||'')).toLowerCase();
   return hay.indexOf(q)>=0;
 }
 
@@ -422,9 +781,14 @@ function cardHtml(d){
     return '<div class="ex" data-copy="'+esc(e)+'"><span class="t">'+esc(e)+'</span><span class="c">点击复制</span></div>';
   }).join('');
   var argHtml=d.args?(' <span class="o">'+esc(d.args)+'</span>'):'';
+  var plain=PLAIN[d.cmd]||'';
+  var plainHtml=plain
+    ? '<div class="plain"><span class="pi">白</span><span class="pt">'+esc(plain)+'</span></div>'
+    : '';
   return '<div class="card">'
     +'<div class="row1"><div class="cmd">'+esc(d.cmd)+'</div>'+verLabel(d.v)
     +'<button class="copy" data-copy="'+esc(d.cmd+(d.args?(' '+d.args):''))+'" title="复制语法">⧉</button></div>'
+    +plainHtml
     +'<div class="syntax"><span class="k">'+esc(d.cmd)+'</span>'+argHtml+'</div>'
     +'<div class="desc">'+esc(d.desc)+'</div>'
     +'<div class="exs">'+exHtml+'</div>'
@@ -541,6 +905,12 @@ document.getElementById('gCopy').addEventListener('click',function(){
   copy(build());
 });
 build();
+
+/* MD3：滚动时 Top App Bar 升起 elevation */
+var hdr=document.querySelector('header');
+addEventListener('scroll',function(){
+  hdr.classList.toggle('scrolled',(window.scrollY||document.documentElement.scrollTop)>4);
+},{passive:true});
 
 render();
 </script>
